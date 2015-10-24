@@ -1,0 +1,414 @@
+<!DOCTYPE HTML><html>
+    <head>
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	
+        <meta charset="UTF-8">
+	
+        <title>phonebook</title>
+	
+        <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0" name="viewport">
+	
+        <link href="wlclient/css/wlclient.css" rel="stylesheet">
+        <link href="wlclient/css/wlgap.android.css" rel="stylesheet">
+        <link href="images/favicon.png" rel="shortcut icon">
+	
+        <link href="images/apple-touch-icon.png" rel="apple-touch-icon">
+	
+        <link href="jqueryMobile/jquery.mobile-1.2.1/jquery.mobile-1.2.1.min.css" rel="stylesheet">
+	
+        <link href="jqueryMobile/jquery.mobile-1.2.1/jquery.mobile.theme-1.2.1.min.css" rel="stylesheet">
+	
+        <link href="jqueryMobile/jquery.mobile-1.2.1/demos/css/themes/default/jquery.mobile.theme-1.2.1.min.css" rel="stylesheet">
+	
+        <link href="jqueryMobile/jquery.mobile-1.2.1/demos/css/themes/default/jquery.mobile-1.2.1.min.css" rel="stylesheet">
+	
+        <link href="jqueryMobile/jquery.mobile-1.2.1/jquery.mobile.theme-1.2.1.css" rel="stylesheet">
+	
+        <link href="jqueryMobile/jquery.mobile-1.2.1/demos/css/themes/default/jquery.mobile-1.2.1.css" rel="stylesheet">
+	
+        <link href="jqueryMobile/jquery.mobile-1.2.1/jquery.mobile.structure-1.2.1.min.css" rel="stylesheet">
+	
+        <link href="jqueryMobile/jquery.mobile-1.2.1/demos/css/themes/default/jquery.mobile.structure-1.2.1.css" rel="stylesheet">
+	
+        <link href="jqueryMobile/jquery.mobile-1.2.1/demos/css/themes/default/jquery.mobile.theme-1.2.1.css" rel="stylesheet">
+	
+        <link href="jqueryMobile/jquery.mobile-1.2.1/jquery.mobile-1.2.1.css" rel="stylesheet">
+	
+        <link href="jqueryMobile/jquery.mobile-1.2.1/demos/docs/_assets/css/jqm-docs.css" rel="stylesheet">
+	
+        <link href="jqueryMobile/jquery.mobile-1.2.1/demos/css/themes/default/jquery.mobile.structure-1.2.1.min.css" rel="stylesheet">
+	
+        <link href="jqueryMobile/jquery.mobile-1.2.1/jquery.mobile.structure-1.2.1.css" rel="stylesheet">
+	
+        <link href="css/phonebook.css" rel="stylesheet">
+	
+        <script>
+
+		// Define WL namespace.
+
+		var WL = WL ? WL : {};
+
+
+
+		/**
+
+		 * WLClient configuration variables.
+
+		 * Values are injected by the deployer that packs the gadget.
+
+		 */
+
+		WL.StaticAppProps = {
+   "APP_DISPLAY_NAME": "phonebook",
+   "APP_SERVICES_URL": "\/apps\/services\/",
+   "APP_VERSION": "1.0",
+   "ENVIRONMENT": "android",
+   "LOGIN_DISPLAY_TYPE": "embedded",
+   "WORKLIGHT_ROOT_URL": "\/apps\/services\/api\/phonebook\/android\/"
+};</script>
+		<script src="wlclient/js/cordova.js"></script>
+		<script src="common/js/wljq.js"></script>
+		<script src="common/js/base.js"></script>
+		<script src="wlclient/js/messages.js"></script>
+		<script src="common/js/wlcommon.js"></script>
+		<script src="wlclient/js/diagnosticDialog.js"></script>
+		<script src="wlclient/js/deviceAuthentication.js"></script>
+		<script src="wlclient/js/window.js"></script>
+		<script src="wlclient/js/worklight.js"></script>
+		<script src="wlclient/js/wlclient.js"></script>
+		<script src="wlclient/js/wlfragments.js"></script>
+		<script src="wlclient/js/encryptedcache.js"></script>
+		<script src="wlclient/js/jsonstore/jsonstore.js"></script>
+		<script src="wlclient/js/checksum.js"></script>
+		<script src="wlclient/js/challengeHandlers/antiXSRFChallengeHandler.js"></script>
+		<script src="wlclient/js/challengeHandlers/authenticityChallengeHandler.js"></script>
+		<script src="wlclient/js/challengeHandlers/deviceAuthAutoProvisioningChallengeHandler.js"></script>
+		<script src="wlclient/js/challengeHandlers/deviceAuthNoProvisioningChallengeHandler.js"></script>
+		<script src="wlclient/js/challengeHandlers/remoteDisableChallengeHandler.js"></script>
+		<script src="wlclient/js/wlgap.android.js"></script><script>window.$ = window.jQuery = WLJQ;</script>
+	<script src="jqueryMobile/jquery.mobile-1.2.1/demos/js/jquery.js"></script>
+	<script src="jqueryMobile/jquery.mobile-1.2.1/demos/js/jquery.mobile-1.2.1.js"></script>
+
+
+        <style>
+      html, body, #map-canvas {
+        height: 100%;
+        margin: 0px;
+        padding: 0px
+      }
+    </style>
+    
+        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+
+    <script>
+// Note: This example requires that you consent to location sharing when
+// prompted by your browser. If you see a blank space instead of the map, this
+// is probably because you have denied permission for location sharing.
+
+var map;
+
+function initialize() {
+  var mapOptions = {
+    zoom: 6
+  };
+  map = new google.maps.Map(document.getElementById('map-canvas'),
+      mapOptions);
+
+  // Try HTML5 geolocation
+  if(navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+      var pos = new google.maps.LatLng(position.coords.latitude,
+                                       position.coords.longitude);
+
+      var infowindow = new google.maps.InfoWindow({
+        map: map,
+        position: pos,
+        content: 'Hey you r here.'
+      });
+
+      map.setCenter(pos);
+    }, function() {
+      handleNoGeolocation(true);
+    });
+  } else {
+    // Browser doesn't support Geolocation
+    handleNoGeolocation(false);
+  }
+}
+
+function handleNoGeolocation(errorFlag) {
+  if (errorFlag) {
+    var content = 'Error: The Geolocation service failed.';
+  } else {
+    var content = 'Error: Your browser doesn\'t support geolocation.';
+  }
+
+  var options = {
+    map: map,
+    position: new google.maps.LatLng(60, 105),
+    content: content
+  };
+
+  var infowindow = new google.maps.InfoWindow(options);
+  map.setCenter(options.position);
+}
+
+google.maps.event.addDomListener(window, 'load', initialize);
+
+    </script>
+    
+
+    </head>
+    <body id="content" style="display: none;">
+	
+        <div data-role="page" id="loginpage">
+            <div data-role="header" id="header5">
+			
+                <h3>LOGIN DETAILS</h3>
+            </div>
+            <div data-role="content" id="logincontent" style="padding: 15px">
+
+			
+                <input id="user" placeholder="USERNAME" type="text">
+                <br>
+			
+                <input id="pass" placeholder="PASSWORD" type="password">
+                <br>
+			
+                <input id="b1" onclick="return log()" type="submit" value="LOGIN">
+
+            </div>
+            <div data-role="footer" id="footer">
+			
+                <h3></h3>
+            </div>
+	
+        </div>
+
+
+	
+        <div data-role="page" id="homepage">
+
+            <div data-role="header" id="header">
+			
+                <h3>CMS</h3>
+            </div>
+
+            <div data-role="content" id="homecontent" style="padding: 15px">
+                <h2 align="center">
+                    <b>WELCOME TO PHONEBOOK</b>
+                </h2>
+
+			
+                <a data-icon="plus" data-iconpos="left" data-role="button" data-theme="b" data-transition="flip" href="#addpage" id="add">ADD CONTACTS</a>
+			<a data-icon="delete" data-iconpos="left" data-role="button" data-theme="b" data-transition="flip" href="#deletepage" id="del">DELETE CONTACT</a>
+			<a data-icon="search" data-iconpos="left" data-role="button" data-theme="b" data-transition="flip" href="#searchpage" id="search">SEARCH CONTACTS</a> 
+			<a data-icon="gear" data-iconpos="left" data-role="button" data-theme="b" data-transition="flip" href="#locationpage" id="location" onclick="return call()">USER LOCATION</a> 
+			<a data-icon="info" data-iconpos="left" data-role="button" data-theme="b" data-transition="flip" href="#viewpage" id="view" onclick="return view()">VIEW CONTACTS</a>
+			
+			
+			
+            </div>
+
+            <div class="footer" data-role="footer">
+			
+                <marquee scrollamount="2">
+                    <h3>copyrights&copy;aakashgupta22494@gmail.com</h3>
+                </marquee>
+			
+            </div>
+
+	
+        </div>
+
+
+	
+        <div data-role="page" id="addpage">
+
+            <div data-role="header" id="header0">
+			
+                <h3>ADD CONTACTS</h3>
+
+            </div>
+
+            <div data-role="content" id="addcontent" style="padding: 15px">
+
+			
+                <form action="" id="form">
+
+				
+                    <label for="text">NAME:</label><input id="name" name="text" placeholder="NAME" type="text"> 
+				<label for="text0">CONTACT NO.:</label><input id="no." name="text0" placeholder="PHONE NO." type="text"> 
+					
+		<input data-icon="check" data-iconpos="left" data-theme="f" onclick="return insert()" type="submit" value="SAVE">
+
+			
+                </form>
+            </div>
+            <div class="footer" data-role="footer">
+			
+                <a data-icon="back" data-iconpos="left" data-role="button" data-transition="flip" href="#homepage" id="button">Back</a>
+			
+            </div>
+
+	
+        </div>
+
+	
+        <div data-role="page" id="deletepage">
+
+            <div data-role="header" id="header1">
+			
+                <h3>DELETE</h3>
+            </div>
+            <div data-role="content" id="deletecontent" style="padding: 15px">
+
+			
+                <label for="text">DELETE CONTACT:</label><input id="test" name="text1" placeholder="Delete Contact" type="text"> 
+			<a data-icon="delete" data-iconpos="left" data-role="button" href="#" id="deletebutton" onclick="return delt()" style="background: red">Delete</a>
+
+            </div>
+            <div class="footer" data-role="footer">
+
+			
+                <a data-icon="back" data-iconpos="left" data-role="button" data-transition="flip" href="#homepage" id="button0">Back</a>
+            </div>
+
+	
+        </div>
+
+
+	
+        <div data-role="page" id="searchpage">
+            <div data-role="header" id="header2">
+			
+                <h4>SEARCH</h4>
+            </div>
+            <div data-role="content" id="searchcontent" style="padding: 15px">
+                <label for="search" id="label">Search Input:</label>
+                <br>
+                <br>
+			
+                <input id="searching" placeholder="search contacts" type="text">
+                <br>
+				
+			
+                <br>
+                <a data-icon="search" data-iconpos="left" data-role="button" data-theme="e" href="#" id="button4" onclick="return show()">search</a>
+				
+                <br>
+                <input id="showing" placeholder="contact no. is" type="text" value="">
+				
+            </div>
+
+            <div class="footer" data-role="footer">
+			
+                <a data-icon="back" data-iconpos="left" data-role="button" data-transition="flip" href="#homepage" id="button1">Back</a>
+            </div>
+
+	
+        </div>
+
+	
+        <div data-role="page" id="locationpage">
+
+            <div data-role="header" id="header3">
+			
+                <h6>LOCATION</h6>
+            </div>
+            <div data-role="content" id="locationcontent" style="padding: 15px">
+		  
+                <div id="map-canvas"></div>
+            </div>
+
+            <div class="footer" data-role="footer">
+			
+                <a data-icon="back" data-iconpos="left" data-role="button" data-transition="flip" href="#homepage" id="button2">Back</a>
+
+            </div>
+
+	
+        </div>
+
+	
+        <div data-role="page" id="viewpage">
+            <div data-role="header" id="header4">
+			
+                <h3>VIEW ALL</h3>
+            </div>
+            <div data-role="content" id="viewcontent" style="padding: 15px">
+
+			
+                <ul data-autodividers="true" data-filter="true" data-input="#filter" data-inset="true" data-role="listview" id="test2">
+                </ul>
+            </div>
+            <div class="footer" data-role="footer">
+			
+                <a data-icon="back" data-iconpos="left" data-role="button" data-transition="flip" href="#homepage" id="button3" onclick="return clear1()">Back</a>
+            </div>
+
+	
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<!--application UI goes here-->
+	
+        <script src="js/initOptions.js"></script>
+	<script src="js/phonebook.js"></script>
+	<script src="js/messages.js"></script>
+
+    </body>
+</html>
